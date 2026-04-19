@@ -1,13 +1,10 @@
-# SAP Order-to-Cash (O2C) — Capstone Project
+ SAP Order-to-Cash (O2C) — Capstone Project
 
-**Student:** Amit Yadav  
-**Roll Number:** 23052297  
-**Batch / Program:** CSE33 — Data Analytics  
-**Submission Date:** April 21, 2026  
+
 
 ---
 
-## 📌 Project Overview
+ 📌 Project Overview
 
 This capstone project implements a complete **SAP Order-to-Cash (O2C)** analytics solution
 covering the full sales cycle from Sales Order creation to Payment Receipt — the core
@@ -22,7 +19,7 @@ The project includes:
 
 ---
 
-## 📁 Folder Structure
+ 📁 Folder Structure
 
 ```
 SAP_O2C_Project/
@@ -50,7 +47,7 @@ SAP_O2C_Project/
 
 ---
 
-## 🔄 SAP O2C Process Flow
+ 🔄 SAP O2C Process Flow
 
 ```
 [Inquiry / Quotation]
@@ -68,7 +65,7 @@ SAP_O2C_Project/
 
 ---
 
-## ⚙️ Tech Stack
+⚙️ Tech Stack
 
 | Component         | Technology              |
 |-------------------|------------------------|
@@ -104,7 +101,7 @@ Open `dashboard/SAP_O2C_Dashboard.html` in any web browser.
 
 ---
 
-## 📊 Key Results
+ 📊 Key Results
 
 | KPI                    | Value           |
 |------------------------|-----------------|
@@ -118,13 +115,13 @@ Open `dashboard/SAP_O2C_Dashboard.html` in any web browser.
 
 ---
 
-## 📋 SAP Modules Covered
+ 📋 SAP Modules Covered
 
-- **SAP SD** — Sales Order, Delivery, Billing
-- **SAP FI** — Invoice posting, Payment clearing
-- **SAP MM** — Material master, Plant data
-- **SAP CO** — Profitability analysis (COPA)
+- SAP SD — Sales Order, Delivery, Billing
+- SAP FI — Invoice posting, Payment clearing
+- SAP MM — Material master, Plant data
+- SAP CO — Profitability analysis (COPA)
 
 ---
 
-*Individual Capstone Project | No Plagiarism | Original Work*
+
