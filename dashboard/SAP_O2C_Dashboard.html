@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SAP O2C Dashboard — Amit Yadav 23052297</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;color:#222;min-height:100vh;}
+.header{background:linear-gradient(135deg,#0d47a1,#1565c0);color:#fff;padding:16px 28px;display:flex;justify-content:space-between;align-items:center;}
+.header h1{font-size:16px;font-weight:600;}
+.header .sub{font-size:12px;opacity:.8;margin-top:3px;}
+.header .badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:5px 14px;border-radius:20px;font-size:12px;}
+.body{max-width:1200px;margin:0 auto;padding:20px;}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
+.kpi{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid #1565c0;}
+.kpi .lbl{font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.kpi .val{font-size:22px;font-weight:700;color:#0d47a1;margin:5px 0 2px;}
+.kpi .sub{font-size:11px;color:#999;}
+.kpi.g{border-color:#2e7d32;}.kpi.g .val{color:#2e7d32;}
+.kpi.o{border-color:#e65100;}.kpi.o .val{color:#e65100;}
+.kpi.r{border-color:#c62828;}.kpi.r .val{color:#c62828;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.card{background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.card.full{grid-column:1/-1;}
+.card h3{font-size:13px;font-weight:600;color:#37474f;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #f0f0f0;}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;font-size:12px;color:#555;}
+.legend span{display:flex;align-items:center;gap:5px;}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block;}
+.flow{display:flex;align-items:center;gap:0;overflow-x:auto;padding:8px 0 4px;}
+.step{background:#f5f5f5;border:1px solid #e0e0e0;border-radius:8px;padding:10px 16px;font-size:12px;white-space:nowrap;flex-shrink:0;}
+.step .sl{color:#888;font-size:10px;margin-bottom:2px;}
+.step .sv{font-weight:600;color:#0d47a1;}
+.arrow{color:#bbb;font-size:18px;padding:0 6px;flex-shrink:0;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:#0d47a1;color:#fff;padding:9px 12px;text-align:left;font-weight:600;font-size:11px;}
+td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:#333;}
+tr:nth-child(even) td{background:#fafafa;}
+.pill{display:inline-block;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;}
+.pg{background:#e8f5e9;color:#2e7d32;}
+.pb{background:#e3f2fd;color:#1565c0;}
+.pa{background:#fff3e0;color:#e65100;}
+.pr{background:#ffebee;color:#c62828;}
+.pp{background:#ede7f6;color:#4527a0;}
+@media(max-width:700px){.kpi-row,.grid{grid-template-columns:1fr;}.card.full{grid-column:1;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>SAP Order-to-Cash (O2C) — Analytics Dashboard</h1>
+    <div class="sub">SAP SD Module | FY 2024 | Capstone Project</div>
+  </div>
+  <div class="badge">Amit Yadav &nbsp;|&nbsp; 23052297 &nbsp;|&nbsp; CSE33</div>
+</div>
+
+<div class="body">
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="lbl">Total Revenue</div><div class="val">&#8377;16.3 Cr</div><div class="sub">Net Value FY 2024</div></div>
+    <div class="kpi g"><div class="lbl">Gross Profit</div><div class="val">&#8377;6.19 Cr</div><div class="sub">Avg Margin: 37.7%</div></div>
+    <div class="kpi o"><div class="lbl">Total Orders</div><div class="val">481</div><div class="sub">Excl. 19 cancelled</div></div>
+    <div class="kpi"><div class="lbl">Avg Order Value</div><div class="val">&#8377;3.39L</div><div class="sub">Per sales order</div></div>
+    <div class="kpi r"><div class="lbl">Avg Delivery Days</div><div class="val">12.4</div><div class="sub">Order to delivery</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card full">
+      <h3>Monthly net revenue trend (2024)</h3>
+      <div style="position:relative;height:200px;"><canvas id="monthly"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Revenue by product category</h3>
+      <div class="legend">
+        <span><i style="background:#1565c0;"></i>Mechanical 42%</span>
+        <span><i style="background:#c62828;"></i>Electrical 38%</span>
+        <span><i style="background:#2e7d32;"></i>Raw material 20%</span>
+      </div>
+      <div style="position:relative;height:180px;"><canvas id="catChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Order status distribution</h3>
+      <div class="legend">
+        <span><i style="background:#2e7d32;"></i>Paid 59%</span>
+        <span><i style="background:#1565c0;"></i>Invoiced 25%</span>
+        <span><i style="background:#6a1b9a;"></i>Delivered 10%</span>
+        <span><i style="background:#e65100;"></i>Open 5%</span>
+        <span><i style="background:#c62828;"></i>Cancelled 4%</span>
+      </div>
+      <div style="position:relative;height:180px;"><canvas id="statusChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Top customers by revenue (&#8377; lakhs)</h3>
+      <div style="position:relative;height:220px;"><canvas id="custChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Quarterly revenue vs profit (&#8377; lakhs)</h3>
+      <div class="legend">
+        <span><i style="background:#1565c0;"></i>Revenue</span>
+        <span><i style="background:#2e7d32;"></i>Profit</span>
+      </div>
+      <div style="position:relative;height:220px;"><canvas id="qtrChart"></canvas></div>
+    </div>
+    <div class="card full">
+      <h3>SAP O2C process flow</h3>
+      <div class="flow">
+        <div class="step"><div class="sl">Inquiry</div><div class="sv">500 leads</div></div><div class="arrow">&#8594;</div>
+        <div class="step"><div class="sl">Quotation (VA21)</div><div class="sv">500 quotes</div></div><div class="arrow">&#8594;</div>
+        <div class="step"><div class="sl">Sales Order (VA01)</div><div class="sv">500 orders</div></div><div class="arrow">&#8594;</div>
+        <div class="step"><div class="sl">Delivery (VL01N)</div><div class="sv">474 shipped</div></div><div class="arrow">&#8594;</div>
+        <div class="step"><div class="sl">Goods Issue (PGI)</div><div class="sv">474 issued</div></div><div class="arrow">&#8594;</div>
+        <div class="step"><div class="sl">Billing (VF01)</div><div class="sv">426 invoiced</div></div><div class="arrow">&#8594;</div>
+        <div class="step"><div class="sl">Payment (F-28)</div><div class="sv">285 cleared</div></div>
+      </div>
+    </div>
+    <div class="card full">
+      <h3>Sample SAP sales order register</h3>
+      <table>
+        <thead><tr><th>SO Number</th><th>Customer</th><th>Material</th><th>Plant</th><th>Net Value (&#8377;)</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>SO-2024002</td><td>Reliance Industries Ltd</td><td>Hydraulic Valve V200</td><td>PL01-Mumbai</td><td>16,071</td><td><span class="pill pg">Payment Received</span></td></tr>
+          <tr><td>SO-2024005</td><td>Tata Consultancy Services</td><td>PLC Unit PL900</td><td>PL02-Pune</td><td>87,500</td><td><span class="pill pb">Invoiced</span></td></tr>
+          <tr><td>SO-2024011</td><td>Infosys Technologies</td><td>Control Panel CP300</td><td>PL03-Bangalore</td><td>44,000</td><td><span class="pill pg">Payment Received</span></td></tr>
+          <tr><td>SO-2024018</td><td>Global Tech Corp (US)</td><td>Industrial Pump A100</td><td>PL01-Mumbai</td><td>1,33,845</td><td><span class="pill pp">Delivered</span></td></tr>
+          <tr><td>SO-2024027</td><td>Wipro Ltd</td><td>Electric Motor EM600</td><td>PL02-Pune</td><td>27,900</td><td><span class="pill pa">Open</span></td></tr>
+          <tr><td>SO-2024033</td><td>HDFC Bank</td><td>Gear Box GB700</td><td>PL01-Mumbai</td><td>58,200</td><td><span class="pill pg">Payment Received</span></td></tr>
+          <tr><td>SO-2024041</td><td>Euro Solutions GmbH</td><td>Safety Valve SV800</td><td>PL03-Bangalore</td><td>72,000</td><td><span class="pill pr">Cancelled</span></td></tr>
+          <tr><td>SO-2024058</td><td>Bajaj Auto Ltd</td><td>Pressure Sensor PS400</td><td>PL02-Pune</td><td>8,750</td><td><span class="pill pb">Invoiced</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+Chart.defaults.font.family = "'Segoe UI', Arial, sans-serif";
+const B='#1565c0',G='#2e7d32',R='#c62828',O='#e65100',P='#6a1b9a',T='#00695c',A='#e65100';
+
+new Chart(document.getElementById('monthly'),{type:'line',
+  data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    datasets:[{label:'Revenue (Rs Lakhs)',data:[98,112,143,127,156,138,172,148,163,141,155,167],
+      borderColor:B,backgroundColor:'rgba(21,101,192,.1)',tension:.4,fill:true,
+      pointBackgroundColor:B,pointRadius:5,borderWidth:2.5,pointBorderColor:'#fff',pointBorderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{y:{beginAtZero:false,ticks:{callback:v=>'Rs'+v+'L'}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('catChart'),{type:'doughnut',
+  data:{labels:['Mechanical','Electrical','Raw material'],
+    datasets:[{data:[42,38,20],backgroundColor:[B,R,G],borderWidth:4,borderColor:'#fff',hoverOffset:8}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
+    plugins:{legend:{display:false}}}});
+
+new Chart(document.getElementById('statusChart'),{type:'pie',
+  data:{labels:['Payment Received','Invoiced','Delivered','Open','Cancelled'],
+    datasets:[{data:[285,122,48,26,19],backgroundColor:[G,B,P,O,R],borderWidth:4,borderColor:'#fff'}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+
+new Chart(document.getElementById('custChart'),{type:'bar',
+  data:{labels:['Reliance Ind.','TCS','Global Tech','Infosys','HDFC Bank','Wipro'],
+    datasets:[{label:'Revenue (Rs L)',data:[187,162,144,138,121,115],
+      backgroundColor:[B,B,R,G,A,P],borderRadius:5,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{x:{ticks:{callback:v=>'Rs'+v+'L'}},y:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('qtrChart'),{type:'bar',
+  data:{labels:['Q1','Q2','Q3','Q4'],
+    datasets:[
+      {label:'Revenue (Rs L)',data:[353,421,483,412],backgroundColor:B,borderRadius:5,borderSkipped:false},
+      {label:'Profit (Rs L)',data:[133,159,182,155],backgroundColor:G,borderRadius:5,borderSkipped:false}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{y:{ticks:{callback:v=>'Rs'+v+'L'}},x:{grid:{display:false}}}}});
+</script>
+</body>
+</html>
